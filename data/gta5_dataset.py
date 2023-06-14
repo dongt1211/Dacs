@@ -1,17 +1,18 @@
+
+from glob import glob
+import cv2
+import time
 import os
 import os.path as osp
 import numpy as np
 import random
-# import matplotlib.pyplot as plt
+from tqdm import tqdm
+import matplotlib.pyplot as plt
 import collections
 import torch
 import torchvision
 from torch.utils import data
 from PIL import Image
-from glob import glob
-import cv2
-import time
-
 import json
 def convert_to_train_id(file):
     # re-assign labels to match the format of Cityscapes
