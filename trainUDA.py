@@ -481,7 +481,7 @@ def main():
             max_probs, targets_u_w = torch.max(pseudo_label, dim=1)
 
             if mix_mask == "class":
-                print("Test: ",overall_class_probs)
+                #print("Test: ",overall_class_probs)
                 for image_i in range(batch_size):
                     classes = torch.unique(labels[image_i])
                     classes=classes[classes!=ignore_label]
