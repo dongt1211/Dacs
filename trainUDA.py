@@ -484,7 +484,7 @@ def main():
                 print("Test: ",overall_class_probs)
                 for image_i in range(batch_size):
                     classes = torch.unique(labels[image_i])
-                    #classes=classes[classes!=ignore_label]
+                    classes=classes[classes!=ignore_label]
                     nclasses = classes.shape[0]
                     #if nclasses > 0:
                     #classes = (classes[torch.Tensor(np.random.choice(nclasses, int((nclasses+nclasses%2)/2),replace=False)).long()]).cuda()
