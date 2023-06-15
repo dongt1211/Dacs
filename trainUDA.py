@@ -492,6 +492,7 @@ def main():
                     #print(len(classes_nbr))
                     overall_class_probs_partial = []
                     for i in classes.view(-1):
+                      print(i.item())
                       overall_class_probs_partial.append(overall_class_probs[i.item()])
           
                     normalized_class_probs = overall_class_probs_partial /np.sum(overall_class_probs_partial )
