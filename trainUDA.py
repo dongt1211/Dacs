@@ -250,9 +250,9 @@ def main():
 
     used_gtav = []
     used_cs = []
-    # overall_class_probs = get_rcs_class_probs("/kaggle/input/gtav-dataset/GTAV", temperature = 0.01)
-    # print(overall_class_probs)
-    # overall_class_probs = [overall_class_probs[key] for key in sorted(overall_class_probs.keys())]
+    overall_class_probs = get_rcs_class_probs("/kaggle/working/Dacs/data/gta5_list", temperature = 0.01)
+    print(overall_class_probs)
+    overall_class_probs = [overall_class_probs[key] for key in sorted(overall_class_probs.keys())]
 
     if consistency_loss == 'MSE':
         if len(gpus) > 1:
@@ -489,14 +489,14 @@ def main():
                     #classes = (classes[torch.Tensor(np.random.choice(nclasses, int((nclasses+nclasses%2)/2),replace=False)).long()]).cuda()
                     classes_nbr = np.arange(nclasses)
                     #print(len(classes_nbr))
-                    # overall_class_probs_partial = []
-                    # for i in classes.view(-1):
-                    #   overall_class_probs_partial.append(overall_class_probs[i.item()])
+                    overall_class_probs_partial = []
+                    for i in classes.view(-1):
+                      overall_class_probs_partial.append(overall_class_probs[i.item()])
           
-                    # normalized_class_probs = overall_class_probs_partial /np.sum(overall_class_probs_partial )
+                    normalized_class_probs = overall_class_probs_partial /np.sum(overall_class_probs_partial )
                     #print(len(normalized_class_probs))
                     #if nclasses > 0:
-                    classes = (classes[torch.Tensor(np.random.choice(classes_nbr, int((nclasses+nclasses%2)/2),replace=False)).long()]).cuda()  
+                    classes = (classes[torch.Tensor(np.random.choice(classes_nbr, int((nclasses+nclasses%2)/2),replace=False, p = normalized_class_probs)).long()]).cuda()  
                        
                     if image_i == 0:
                         MixMask0 = transformmasks.generate_class_mask(labels[image_i], classes).unsqueeze(0).cuda()
