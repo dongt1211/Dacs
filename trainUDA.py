@@ -709,7 +709,7 @@ if __name__ == '__main__':
 
     save_checkpoint_every = config['utils']['save_checkpoint_every']
     if args.resume:
-        checkpoint_dir = os.path.join(*args.resume.split('/')[:-1]) + '_resume-' + start_writeable
+        checkpoint_dir = os.path.join(config['utils']['checkpoint_dir'], start_writeable + '-' + args.name)
     else:
         checkpoint_dir = os.path.join(config['utils']['checkpoint_dir'], start_writeable + '-' + args.name)
     log_dir = checkpoint_dir
