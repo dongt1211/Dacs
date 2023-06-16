@@ -247,7 +247,7 @@ def _resume_checkpoint(resume_path, model, optimizer, ema_model):
 
 def main():
     print(config)
-
+    best_mIoU=0
     used_gtav = []
     used_cs = []
     overall_class_probs = get_rcs_class_probs("/kaggle/working/Dacs/data/gta5_list", temperature = 0.01)
@@ -631,7 +631,7 @@ def main():
             print(used_gtav)
             print(used_cs)
             break
-    """
+    
     _save_checkpoint(num_iterations, model, optimizer, config, ema_model)
 
     model.eval()
@@ -649,7 +649,7 @@ def main():
 
     end = timeit.default_timer()
     print('Total time: ' + str(end-start) + 'seconds')
-    """
+    
 
 if __name__ == '__main__':
 
