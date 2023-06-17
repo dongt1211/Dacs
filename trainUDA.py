@@ -488,14 +488,15 @@ def main():
                     nclasses = classes.shape[0]
                     #if nclasses > 0:
                     #classes = (classes[torch.Tensor(np.random.choice(nclasses, int((nclasses+nclasses%2)/2),replace=False)).long()]).cuda()
-                    classes_nbr = np.arange(nclasses)
+
                     #print(len(classes_nbr))
                     overall_class_probs_partial = []
                     for i in classes.view(-1):
                       #print(i.item())
                       overall_class_probs_partial.append(overall_class_probs[i.item()])
           
-                    normalized_class_probs = overall_class_probs_partial /np.sum(overall_class_probs_partial )
+                    normalized_class_probs = overall_class_probs_partial /np.sum(overall_class_probs_partial)
+                    classes_nbr = np.arange(len(overall_class_probs_partial))
                     #print(len(normalized_class_probs))
                     #if nclasses > 0:
                     classes = (classes[torch.Tensor(np.random.choice(classes_nbr, int((nclasses+nclasses%2)/2),replace=False, p = normalized_class_probs)).long()]).cuda()  
