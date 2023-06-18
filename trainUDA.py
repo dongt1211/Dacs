@@ -487,11 +487,13 @@ def main():
                       overall_class_probs_partial.append(overall_class_probs[i.item()])
           
                     normalized_class_probs = overall_class_probs_partial /np.sum(overall_class_probs_partial)
-                    classes_nbr = np.arange(len(overall_class_probs_partial))
+                    classes_nbr = np.arange(len(normalized_class_probs ))
                     #print(len(normalized_class_probs))
                     #if nclasses > 0:
-                    classes = (classes[torch.Tensor(np.random.choice(classes_nbr, int((nclasses+nclasses%2)/2),replace=False, p = normalized_class_probs)).long()]).cuda()  
-                       
+                    if np.sum(normalized_class_probs) ==1:
+                       classes = (classes[torch.Tensor(np.random.choice(classes_nbr, int((nclasses+nclasses%2)/2),replace=False, p = normalized_class_probs)).long()]).cuda()  
+                    else:
+                       classes = (classes[torch.Tensor(np.random.choice(classes_nbr, int((nclasses+nclasses%2)/2),replace=False)).long()]).cuda()  
                     if image_i == 0:
                         MixMask0 = transformmasks.generate_class_mask(labels[image_i], classes).unsqueeze(0).cuda()
                     else:
