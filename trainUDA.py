@@ -248,6 +248,8 @@ def _resume_checkpoint(resume_path, model, optimizer, ema_model):
 def main():
     print(config)
     best_mIoU=0
+    used_gtav = []
+    used_cs = []
     overall_class_probs = get_rcs_class_probs("/kaggle/working/Dacs/data/gta5_list", temperature = 0.01)
     print(overall_class_probs)
     overall_class_probs = [overall_class_probs[key] for key in sorted(overall_class_probs.keys())]
@@ -305,7 +307,7 @@ def main():
             data_aug = None
 
         #data_aug = Compose([RandomHorizontallyFlip()])
-        train_dataset = data_loader(data_path, is_transform=True, augmentations=data_aug, img_size=input_size, img_mean = IMG_MEAN)
+        train_dataset = data_loader(data_path, is_transform=True, augmentations=data_aug, img_size=input_size, img_mean = IMG_MEAN, used_images = usedImages.u_cs)
 
     train_dataset_size = len(train_dataset)
     print('dataset size: ', train_dataset_size)
@@ -338,7 +340,7 @@ def main():
             data_aug = None
 
         #data_aug = Compose([RandomHorizontallyFlip()])
-        train_dataset = data_loader(data_path, augmentations=data_aug, img_size=(1280,720), mean=IMG_MEAN)
+        train_dataset = data_loader(data_path, augmentations=data_aug, img_size=(1280,720), mean=IMG_MEAN, used_images=usedImages.u_gtav)
 
     trainloader = data.DataLoader(train_dataset,
                     batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=True)
@@ -415,7 +417,8 @@ def main():
 
                 trainloader = data.DataLoader(train_dataset,
                     batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=True) 
-
+            if epochs_since_start_gtav >= 2:
+                used_gtav = []
             print('Epochs since start: ',epochs_since_start_gtav)
             print('gta size:',len(trainloader))
             trainloader_iter = iter(trainloader)
@@ -426,10 +429,12 @@ def main():
         #else:
         weak_parameters={"flip": 0}
 
-        images, labels, _, _ = batch
+        images, labels, _,names_gtav = batch
         images = images.cuda()
         labels = labels.cuda().long()
-
+        if epochs_since_start_gtav >= 2:
+            for name_gtav in names_gtav:
+                used_gtav.append(name_gtav)
         #images, labels = weakTransform(weak_parameters, data = images, target = labels)
 
         pred = interp(model(images))
@@ -455,12 +460,18 @@ def main():
                     train_dataset = data_loader(data_path, is_transform=True, augmentations=data_aug, img_size=input_size, img_mean = IMG_MEAN)
                     trainloader_remain = data.DataLoader(train_dataset,
                         batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=True)
+                    if epochs_since_start_cs >= 16:
+                       used_cs = []
+                    
 
                 print('Epochs since start_cs: ',epochs_since_start_cs)
                 trainloader_remain_iter = iter(trainloader_remain)
                 batch_remain = next(trainloader_remain_iter)
             
-            images_remain, _, _, _, _ = batch_remain
+            images_remain, _, _, _, names_cs = batch_remain
+            if epochs_since_start_cs >= 16:
+                for name_cs in names_cs:
+                    used_cs.append(name_cs)
     
             images_remain = images_remain.cuda()
             inputs_u_w, _ = weakTransform(weak_parameters, data = images_remain)
@@ -621,10 +632,10 @@ def main():
             _, pred_u_s = torch.max(logits_u_s, dim=1)
             save_image(pred_u_s[0].cpu(),i_iter,'pred1',palette.CityScpates_palette)
             save_image(pred_u_s[1].cpu(),i_iter,'pred2',palette.CityScpates_palette)
-        # if i_iter == 235000:
-        #     print(used_gtav)
-        #     print(used_cs)
-        #     break
+        if i_iter == 40000:
+            print(used_gtav)
+            print(used_cs)
+            break
     
     _save_checkpoint(num_iterations, model, optimizer, config, ema_model)
 

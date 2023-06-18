@@ -73,7 +73,7 @@ def save_class_stats(out_dir, sample_class_stats):
     with open(osp.join(out_dir, 'samples_with_class.json'), 'w') as of:
         json.dump(samples_with_class, of, indent=2)
 class GTA5DataSet(data.Dataset):
-    def __init__(self, root, max_iters=None, augmentations = None, img_size=(321, 321), mean=(128, 128, 128), scale=True, mirror=True, ignore_label=250):
+    def __init__(self, root, max_iters=None, augmentations = None, img_size=(321, 321), mean=(128, 128, 128), scale=True, mirror=True, ignore_label=250, used_images=None):
         self.root = root
         # self.list_path = list_path
         self.img_size = img_size
@@ -104,6 +104,8 @@ class GTA5DataSet(data.Dataset):
         for img_path in glob(self.root + "/images/*.png"):
             mask_path = img_path.replace("images", "labels")
             name = img_path.split("/")[-1].replace(".png", "")
+            if (used_images is not None) and (name in used_images):
+                continue
             #Error pictures inside GTA5 dataset
             if(('/images/15188' not in img_path) and  ('/images/17705' not in img_path)):
                 self.files.append(
