@@ -378,7 +378,7 @@ def main():
 
     accumulated_loss_l = []
     accumulated_loss_u = []
-
+#Save config
     if not os.path.exists(checkpoint_dir):
         os.makedirs(checkpoint_dir)
     with open(checkpoint_dir + '/config.json', 'w') as handle:
@@ -460,7 +460,7 @@ def main():
                     train_dataset = data_loader(data_path, is_transform=True, augmentations=data_aug, img_size=input_size, img_mean = IMG_MEAN)
                     trainloader_remain = data.DataLoader(train_dataset,
                         batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=True)
-                    if epochs_since_start_cs >= 16:
+                    if epochs_since_start_cs >= 8:
                        used_cs = []
                     
 
@@ -469,7 +469,7 @@ def main():
                 batch_remain = next(trainloader_remain_iter)
             
             images_remain, _, _, _, names_cs = batch_remain
-            if epochs_since_start_cs >= 16:
+            if epochs_since_start_cs >= 8:
                 for name_cs in names_cs:
                     used_cs.append(name_cs)
     
