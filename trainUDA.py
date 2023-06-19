@@ -632,11 +632,11 @@ def main():
             _, pred_u_s = torch.max(logits_u_s, dim=1)
             save_image(pred_u_s[0].cpu(),i_iter,'pred1',palette.CityScpates_palette)
             save_image(pred_u_s[1].cpu(),i_iter,'pred2',palette.CityScpates_palette)
-        if i_iter == 40000:
+        if i_iter == 45000:
             print(used_gtav)
             print(used_cs)
-            break
-    
+        if i_iter == 50000:
+           break
     _save_checkpoint(num_iterations, model, optimizer, config, ema_model)
 
     model.eval()
