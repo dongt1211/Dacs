@@ -417,8 +417,8 @@ def main():
 
                 trainloader = data.DataLoader(train_dataset,
                     batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=True) 
-            if epochs_since_start_gtav >= 2:
-                used_gtav = []
+            # if epochs_since_start_gtav >= 2:
+            #     used_gtav = []
             print('Epochs since start: ',epochs_since_start_gtav)
             print('gta size:',len(trainloader))
             trainloader_iter = iter(trainloader)
@@ -432,8 +432,8 @@ def main():
         images, labels, _,names_gtav = batch
         images = images.cuda()
         labels = labels.cuda().long()
-        if epochs_since_start_gtav >= 2:
-            for name_gtav in names_gtav:
+        # if epochs_since_start_gtav >= 2:
+        for name_gtav in names_gtav:
                 used_gtav.append(name_gtav)
         #images, labels = weakTransform(weak_parameters, data = images, target = labels)
 
@@ -460,8 +460,8 @@ def main():
                     train_dataset = data_loader(data_path, is_transform=True, augmentations=data_aug, img_size=input_size, img_mean = IMG_MEAN)
                     trainloader_remain = data.DataLoader(train_dataset,
                         batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=True)
-                    if epochs_since_start_cs >= 8:
-                       used_cs = []
+                    # if epochs_since_start_cs >= 8:
+                    #    used_cs = []
                     
 
                 print('Epochs since start_cs: ',epochs_since_start_cs)
@@ -469,8 +469,8 @@ def main():
                 batch_remain = next(trainloader_remain_iter)
             
             images_remain, _, _, _, names_cs = batch_remain
-            if epochs_since_start_cs >= 8:
-                for name_cs in names_cs:
+            # if epochs_since_start_cs >= 8:
+            for name_cs in names_cs:
                     used_cs.append(name_cs)
     
             images_remain = images_remain.cuda()
@@ -632,10 +632,10 @@ def main():
             _, pred_u_s = torch.max(logits_u_s, dim=1)
             save_image(pred_u_s[0].cpu(),i_iter,'pred1',palette.CityScpates_palette)
             save_image(pred_u_s[1].cpu(),i_iter,'pred2',palette.CityScpates_palette)
-        if i_iter == 45000:
+        if i_iter == 50000:
             print(used_gtav)
             print(used_cs)
-        if i_iter == 50000:
+        if i_iter == 55000:
            break
     _save_checkpoint(num_iterations, model, optimizer, config, ema_model)
 
